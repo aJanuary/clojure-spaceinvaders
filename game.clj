@@ -1,30 +1,30 @@
 (ns game)
 
-(defn context []
+(defn renderTarget []
   (let [target (.getElementById js/document "target")]
-    [
-      (.getContext target "2d") 
-      (. target -width)
-      (. target -height)
-    ]
+    {
+      :context (.getContext target "2d") 
+      :width (. target -width)
+      :height (. target -height)
+    }
   )
 )
 
-(defn clearScreen [[ctx width height]]
-  (set! (. ctx -fillStyle) "#FFF")
-  (.clearRect ctx 0 0 width height) 
+(defn clearScreen [rt]
+  (set! (. (:context rt) -fillStyle) "#FFF")
+  (.clearRect (:context rt) 0 0 (:width rt) (:height rt))
 )
 
-(defn drawSquare [[ctx width height] x y w h]
-  (set! (. ctx -fillStyle) "#000")
-  (.fillRect ctx x y w h) 
+(defn drawSquare [rt x y w h]
+  (set! (. (:context rt) -fillStyle) "#000")
+  (.fillRect (:context rt) x y w h) 
 )
 
 
 (defn tick [x]
-  (let [ctx (context)] 
-    (clearScreen ctx) 
-    (drawSquare ctx x 0 100 100)  
+  (let [rt (renderTarget)] 
+    (clearScreen rt) 
+    (drawSquare rt x 0 100 100)  
     (if (<= x 1000) 
       (js/setTimeout (fn []
         (tick (inc x)) 
