@@ -24,7 +24,6 @@
 (defn tick [frame]
   (let [ctx (context)] 
     (clearScreen ctx) 
-    (.log js/console "Draw frame")
     (drawSquare ctx frame 0 100 100)
   )
 )
