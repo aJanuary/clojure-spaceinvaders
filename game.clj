@@ -21,20 +21,22 @@
 )
 
 
-(defn tick [x]
+(defn tick [frame]
   (let [ctx (context)] 
     (clearScreen ctx) 
-    (drawSquare ctx x 0 100 100)  
-    (if (<= x 1000) 
-      (js/setTimeout (fn []
-        (tick (inc x)) 
-      ) 33  )
-    )
+    (.log js/console "Draw frame")
+    (drawSquare ctx frame 0 100 100)
   )
 )
 
 
+(defn slowMap [f coll delay]
+  (when (seq coll)
+    (f (first coll))
+    (js/setTimeout #(slowMap f (rest coll) delay) delay)
+  )
+)
 
 (defn ^:export init []
-  (tick 0) 
+  (slowMap #(tick %1) (range 1000) 33)
 )
